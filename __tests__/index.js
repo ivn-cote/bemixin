@@ -5,6 +5,12 @@ import ReactDOM from 'react-dom';
 import TestUtils from 'react-addons-test-utils';
 import Bem from '../index';
 
+let getClassName = (component, ref) => {
+  let domBlock = TestUtils.renderIntoDocument(component),
+    domRef = ref && domBlock.refs[ref];
+  return ReactDOM.findDOMNode(domRef || domBlock).className;
+}
+
 describe('Bem mixin', () => {
   it('should provide block naming', () => {
     let Block = React.createClass({
@@ -14,8 +20,8 @@ describe('Bem mixin', () => {
       }
     });
 
-    let domBlock = TestUtils.renderIntoDocument(<Block />);
-    expect(ReactDOM.findDOMNode(domBlock).className).toBe('block');
+    expect(getClassName(<Block />))
+      .toBe('block');
   });
 
   it('should provide element naming', () => {
@@ -30,8 +36,8 @@ describe('Bem mixin', () => {
       }
     });
 
-    let domBlock = TestUtils.renderIntoDocument(<Block />);
-    expect(ReactDOM.findDOMNode(domBlock.refs.element).className).toBe('block-element');
+    expect(getClassName(<Block />, 'element'))
+      .toBe('block-element');
   });
 
   it('should provide modificators for a block', () => {
@@ -46,8 +52,8 @@ describe('Bem mixin', () => {
       }
     });
 
-    let domBlock = TestUtils.renderIntoDocument(<Block />);
-    expect(ReactDOM.findDOMNode(domBlock).className).toBe('block block_modificator');
+    expect(getClassName(<Block />))
+      .toBe('block block_modificator');
   });
 
   it('should provide modificators for an element', () => {
@@ -62,8 +68,8 @@ describe('Bem mixin', () => {
       }
     });
 
-    let domBlock = TestUtils.renderIntoDocument(<Block />);
-    expect(ReactDOM.findDOMNode(domBlock.refs.element).className).toBe('block-element block-element_modificator');
+    expect(getClassName(<Block />, 'element'))
+      .toBe('block-element block-element_modificator');
   });
 
   it('should provide multiple modificators for a block', () => {
@@ -78,8 +84,8 @@ describe('Bem mixin', () => {
       }
     });
 
-    let domBlock = TestUtils.renderIntoDocument(<Block />);
-    expect(ReactDOM.findDOMNode(domBlock).className).toBe('block block_modificator block_anotheModificator');
+    expect(getClassName(<Block />))
+      .toBe('block block_modificator block_anotheModificator');
   });
 
   it('should support state matching (with modificators)', () => {
@@ -100,8 +106,8 @@ describe('Bem mixin', () => {
       }
     });
 
-    let domBlock = TestUtils.renderIntoDocument(<Block />);
-    expect(ReactDOM.findDOMNode(domBlock).className).toBe('block block_statusModificator');
+    expect(getClassName(<Block />))
+      .toBe('block block_statusModificator');
   });
 
   it('should support naming via props for element components', () => {
@@ -125,8 +131,8 @@ describe('Bem mixin', () => {
         }
       });
 
-      let domBlock = TestUtils.renderIntoDocument(<Block />);
-      expect(ReactDOM.findDOMNode(domBlock.refs.deep0).className).toBe('block-deepElement block-deepElement_withMod');
+      expect(getClassName(<Block />, 'deep0'))
+        .toBe('block-deepElement block-deepElement_withMod');
   });
 
   it('should support naming via opt param in child components', () => {
@@ -150,8 +156,8 @@ describe('Bem mixin', () => {
         }
       });
 
-      let domBlock = TestUtils.renderIntoDocument(<Block />);
-      expect(ReactDOM.findDOMNode(domBlock.refs.deep0).className).toBe('block-deepElement');
+      expect(getClassName(<Block />, 'deep0'))
+        .toBe('block-deepElement');
   });
 
   it('should support force bem naming via opt param in child components', () => {
@@ -175,8 +181,8 @@ describe('Bem mixin', () => {
         }
       });
 
-      let domBlock = TestUtils.renderIntoDocument(<Block />);
-      expect(ReactDOM.findDOMNode(domBlock.refs.deep0).className).toBe('goodLetter-deepElement');
+      expect(getClassName(<Block />, 'deep0'))
+        .toBe('goodLetter-deepElement');
   });
 
   it('should support force bem modificators via opt param in child components', () => {
@@ -200,8 +206,8 @@ describe('Bem mixin', () => {
         }
       });
 
-      let domBlock = TestUtils.renderIntoDocument(<Block />);
-      expect(ReactDOM.findDOMNode(domBlock.refs.deep0).className).toBe('justLetter justLetter_withStyle');
+      expect(getClassName(<Block />, 'deep0'))
+        .toBe('justLetter justLetter_withStyle');
   });
 
   it('should support force block naming via special component field', () => {
@@ -217,8 +223,8 @@ describe('Bem mixin', () => {
         }
       });
 
-      let domBlock = TestUtils.renderIntoDocument(<Block />);
-      expect(ReactDOM.findDOMNode(domBlock).className).toBe('forcedName');
+      expect(getClassName(<Block />))
+        .toBe('forcedName');
   });
 
   it('should support force block naming via helper', () => {
@@ -234,7 +240,7 @@ describe('Bem mixin', () => {
         }
       });
 
-      let domBlock = TestUtils.renderIntoDocument(<Block />);
-      expect(ReactDOM.findDOMNode(domBlock).className).toBe('wholePage');
+      expect(getClassName(<Block />))
+        .toBe('wholePage');
   });
 });
