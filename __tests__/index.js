@@ -12,6 +12,23 @@ let getClassName = (component, ref) => {
 }
 
 describe('Bem mixin', () => {
+  it('should support force block naming via special component property', () => {
+    let Block = React.createClass({
+      bemComponentName: 'ForcedName',
+      mixins: [ Bem ],
+      render() {
+        return (
+          <div className={this.b_()}>
+            Some content here
+          </div>
+        )
+      }
+    });
+
+    expect(getClassName(<Block />))
+      .toBe('forcedName');
+  });
+
   describe('should provide main BEM notation', () => {
     it('1. block naming', () => {
       let Block = React.createClass({
@@ -116,113 +133,114 @@ describe('Bem mixin', () => {
 
   describe('should support naming propagation via className property', () => {
     it('it should be possible to propagate full naming to child component', () => {
-        let JustLetter = React.createClass({
-          mixins: [ Bem ],
-          render() {
-            return (<span className={this.b_()}>A</span>)
-          }
-        });
+      let JustLetter = React.createClass({
+        mixins: [ Bem ],
+        render() {
+          return (<span className={this.b_()}>A</span>)
+        }
+      });
 
-        let Block = React.createClass({
-          mixins: [ Bem ],
-          render() {
-            return (
-              <div className={this.b_()}>
-                {[...Array(3)].map((x, ind) =>
-                  <JustLetter key={ind} ref={`deep${ind}`} className={this.b_('-deepElement_withMod')} />
-                )}
-              </div>
-            )
-          }
-        });
-
-        expect(getClassName(<Block />, 'deep0'))
-          .toBe('block-deepElement block-deepElement_withMod');
-    });
-
-    it('it should be possible to use block name in child component', () => {
-        let JustLetter = React.createClass({
-          mixins: [ Bem ],
-          render() {
-            return (<span className={this.b_('-deepElement', 'overflow')}>A</span>)
-          }
-        });
-
-        let Block = React.createClass({
-          mixins: [ Bem ],
-          render() {
-            return (
-              <div className={this.b_()}>
-                {[...Array(3)].map((x, ind) =>
-                  <JustLetter key={ind} ref={`deep${ind}`} className={this.b_()} />
-                )}
-              </div>
-            )
-          }
-        });
-
-        expect(getClassName(<Block />, 'deep0'))
-          .toBe('block-deepElement');
-    });
-
-    it('it should be possible to use ANY block name in child component', () => {
-        let JustLetter = React.createClass({
-          mixins: [ Bem ],
-          render() {
-            return (<span className={this.b_('-deepElement', 'overflow')}>A</span>)
-          }
-        });
-
-        let Block = React.createClass({
-          mixins: [ Bem ],
-          render() {
-            return (
-              <div className={this.b_()}>
-                {[...Array(3)].map((x, ind) =>
-                  <JustLetter key={ind} ref={`deep${ind}`} className={this.b_('goodLetter')} />
-                )}
-              </div>
-            )
-          }
-        });
-
-        expect(getClassName(<Block />, 'deep0'))
-          .toBe('goodLetter-deepElement');
-    });
-
-    it('it should be possible to force modificator naming in child component', () => {
-        let JustLetter = React.createClass({
-          mixins: [ Bem ],
-          render() {
-            return (<span className={this.b_('', 'inherit')}>A</span>)
-          }
-        });
-
-        let Block = React.createClass({
-          mixins: [ Bem ],
-          render() {
-            return (
-              <div className={this.b_()}>
-                {[...Array(3)].map((x, ind) =>
-                  <JustLetter key={ind} ref={`deep${ind}`} className="_withStyle" />
-                )}
-              </div>
-            )
-          }
-        });
-
-        expect(getClassName(<Block />, 'deep0'))
-          .toBe('justLetter justLetter_withStyle');
-    });
-  });
-
-  it('should support force block naming via special component property', () => {
       let Block = React.createClass({
-        bemComponentName: 'ForcedName',
         mixins: [ Bem ],
         render() {
           return (
             <div className={this.b_()}>
+              {[...Array(3)].map((x, ind) =>
+                <JustLetter key={ind} ref={`deep${ind}`} className={this.b_('-deepElement_withMod')} />
+              )}
+            </div>
+          )
+        }
+      });
+
+      expect(getClassName(<Block />, 'deep0'))
+        .toBe('block-deepElement block-deepElement_withMod');
+    });
+
+    it('it should be possible to use block name in child component', () => {
+      let JustLetter = React.createClass({
+        mixins: [ Bem ],
+        render() {
+          return (<span className={this.b_('-deepElement', 'overflow')}>A</span>)
+        }
+      });
+
+      let Block = React.createClass({
+        mixins: [ Bem ],
+        render() {
+          return (
+            <div className={this.b_()}>
+              {[...Array(3)].map((x, ind) =>
+                <JustLetter key={ind} ref={`deep${ind}`} className={this.b_()} />
+              )}
+            </div>
+          )
+        }
+      });
+
+      expect(getClassName(<Block />, 'deep0'))
+        .toBe('block-deepElement');
+    });
+
+    it('it should be possible to use ANY block name in child component', () => {
+      let JustLetter = React.createClass({
+        mixins: [ Bem ],
+        render() {
+          return (<span className={this.b_('-deepElement', 'overflow')}>A</span>)
+        }
+      });
+
+      let Block = React.createClass({
+        mixins: [ Bem ],
+        render() {
+          return (
+            <div className={this.b_()}>
+              {[...Array(3)].map((x, ind) =>
+                <JustLetter key={ind} ref={`deep${ind}`} className={this.b_('goodLetter')} />
+              )}
+            </div>
+          )
+        }
+      });
+
+      expect(getClassName(<Block />, 'deep0'))
+        .toBe('goodLetter-deepElement');
+    });
+
+    it('it should be possible to force modificator naming in child component', () => {
+      let JustLetter = React.createClass({
+        mixins: [ Bem ],
+        render() {
+          return (<span className={this.b_('', 'inherit')}>A</span>)
+        }
+      });
+
+      let Block = React.createClass({
+        mixins: [ Bem ],
+        render() {
+          return (
+            <div className={this.b_()}>
+              {[...Array(3)].map((x, ind) =>
+                <JustLetter key={ind} ref={`deep${ind}`} className="_withStyle" />
+              )}
+            </div>
+          )
+        }
+      });
+
+      expect(getClassName(<Block />, 'deep0'))
+        .toBe('justLetter justLetter_withStyle');
+    });
+  });
+
+  describe('should have fallback for dumb components', () => {
+    it('should support force block naming via helper', () => {
+      let
+        b_ = Bem.asHelper('WholePage'),
+        Block = React.createClass({
+        render() {
+          return (
+            <div className={b_()}>
               Some content here
             </div>
           )
@@ -230,25 +248,7 @@ describe('Bem mixin', () => {
       });
 
       expect(getClassName(<Block />))
-        .toBe('forcedName');
-  });
-
-  describe('should have fallback for dumb components', () => {
-    it('should support force block naming via helper', () => {
-        let
-          b_ = Bem.asHelper('WholePage'),
-          Block = React.createClass({
-          render() {
-            return (
-              <div className={b_()}>
-                Some content here
-              </div>
-            )
-          }
-        });
-
-        expect(getClassName(<Block />))
-          .toBe('wholePage');
+        .toBe('wholePage');
     });
   });
 });
