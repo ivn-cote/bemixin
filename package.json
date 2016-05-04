@@ -1,5 +1,5 @@
 {
-  "name": "bemixin",
+  "name": "react-bemixin",
   "version": "1.1.0",
   "description": "BEM mixin for React applications",
   "main": "index.js",
@@ -31,6 +31,10 @@
       "<rootDir>/node_modules/react-dom",
       "<rootDir>/node_modules/react-addons-test-utils"
     ]
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ivn-cote/bemixin.git"
   },
   "author": "Ivn Cote",
   "license": "MIT"
